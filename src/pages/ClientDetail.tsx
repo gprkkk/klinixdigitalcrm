@@ -178,16 +178,16 @@ export default function ClientDetail() {
 
   return (
     <>
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-        <div className="flex items-center gap-4">
-          <Link to="/app/clientes" className="icon-btn">
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4 md:mb-7">
+        <div className="flex min-w-0 items-center gap-3 md:gap-4">
+          <Link to="/app/clientes" className="icon-btn shrink-0">
             <ArrowLeft size={16} />
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <div className="min-w-0">
+            <h1 className="truncate text-xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
               {client.full_name}
             </h1>
-            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            <p className="mt-1 text-xs text-slate-500 md:text-sm dark:text-slate-400">
               Ficha clínica e histórico de atendimentos
             </p>
           </div>
@@ -195,14 +195,14 @@ export default function ClientDetail() {
       </div>
 
       <div className="card mb-6 overflow-hidden">
-        <div className="relative bg-gradient-to-r from-brand-500 to-accent-500 px-7 py-7 text-white">
-          <div className="flex items-center gap-5">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/15 text-xl font-bold backdrop-blur">
+        <div className="relative bg-gradient-to-r from-brand-500 to-accent-500 px-5 py-6 text-white md:px-7 md:py-7">
+          <div className="flex flex-wrap items-center gap-4 md:gap-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/15 text-lg font-bold backdrop-blur md:h-16 md:w-16 md:text-xl">
               {getInitials(client.full_name)}
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-xl font-bold tracking-tight">{client.full_name}</div>
-              <div className="mt-0.5 text-xs font-medium uppercase tracking-wider text-white/70">
+              <div className="truncate text-lg font-bold tracking-tight md:text-xl">{client.full_name}</div>
+              <div className="mt-0.5 text-[10px] font-medium uppercase tracking-wider text-white/70 md:text-xs">
                 ID #{client.id.slice(0, 6).toUpperCase()}
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function ClientDetail() {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-6 px-7 py-6 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 px-5 py-5 md:grid-cols-3 md:gap-6 md:px-7 md:py-6">
           <div className="flex items-center gap-3">
             <div className="icon-btn-blue h-11 w-11">
               <Phone size={15} />
@@ -267,11 +267,11 @@ export default function ClientDetail() {
         </div>
       </div>
 
-      <div className="mb-6 inline-flex items-center gap-1 rounded-full bg-white p-1 shadow-card dark:bg-slate-900">
+      <div className="mb-6 flex w-full items-center gap-1 rounded-full bg-white p-1 shadow-card md:inline-flex md:w-auto dark:bg-slate-900">
         <button
           type="button"
           onClick={() => setTab('anamnesis')}
-          className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+          className={`flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition md:flex-none md:px-5 md:text-sm ${
             tab === 'anamnesis'
               ? 'bg-gradient-cta text-white shadow-chic'
               : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
@@ -282,7 +282,7 @@ export default function ClientDetail() {
         <button
           type="button"
           onClick={() => setTab('history')}
-          className={`flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition ${
+          className={`flex flex-1 items-center justify-center gap-2 rounded-full px-4 py-2.5 text-xs font-semibold transition md:flex-none md:px-5 md:text-sm ${
             tab === 'history'
               ? 'bg-gradient-pink text-white shadow-chic'
               : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
@@ -304,7 +304,7 @@ export default function ClientDetail() {
       )}
 
       {tab === 'anamnesis' && (
-        <form onSubmit={handleSubmit} className="card space-y-5 p-7">
+        <form onSubmit={handleSubmit} className="card space-y-5 p-5 md:p-7">
           <div>
             <label className="label">Tipo de pele</label>
             <select
@@ -343,7 +343,7 @@ export default function ClientDetail() {
           </div>
 
           <div className="flex justify-end">
-            <button type="submit" className="btn-primary" disabled={saving}>
+            <button type="submit" className="btn-primary w-full justify-center md:w-auto" disabled={saving}>
               {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
               Salvar ficha
             </button>
@@ -352,7 +352,7 @@ export default function ClientDetail() {
       )}
 
       {tab === 'history' && (
-        <div className="card p-7">
+        <div className="card p-5 md:p-7">
           {history.length === 0 ? (
             <div className="rounded-2xl bg-slate-50 py-12 text-center text-sm text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
               Este paciente ainda não possui atendimentos registrados.

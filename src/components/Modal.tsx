@@ -10,10 +10,10 @@ interface ModalProps {
 }
 
 const sizeMap: Record<NonNullable<ModalProps['size']>, string> = {
-  sm: 'max-w-md',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
+  sm: 'sm:max-w-md',
+  md: 'sm:max-w-lg',
+  lg: 'sm:max-w-2xl',
+  xl: 'sm:max-w-4xl',
 }
 
 export default function Modal({ open, onClose, title, children, size = 'md' }: ModalProps) {
@@ -30,15 +30,15 @@ export default function Modal({ open, onClose, title, children, size = 'md' }: M
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4 py-6 backdrop-blur-sm dark:bg-slate-950/70"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-slate-900/40 backdrop-blur-sm sm:items-center sm:px-4 sm:py-6 dark:bg-slate-950/70"
       onClick={onClose}
     >
       <div
-        className={`card flex w-full ${sizeMap[size]} max-h-[90vh] flex-col overflow-hidden`}
+        className={`card flex w-full ${sizeMap[size]} max-h-[92vh] flex-col overflow-hidden rounded-b-none sm:rounded-[2rem]`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-7 py-5">
-          <h2 className="text-lg font-bold tracking-tight text-slate-900 dark:text-slate-100">
+        <div className="flex items-center justify-between px-5 py-4 md:px-7 md:py-5">
+          <h2 className="text-base font-bold tracking-tight text-slate-900 md:text-lg dark:text-slate-100">
             {title}
           </h2>
           <button
@@ -50,7 +50,7 @@ export default function Modal({ open, onClose, title, children, size = 'md' }: M
             <X size={16} />
           </button>
         </div>
-        <div className="overflow-y-auto px-7 pb-7">{children}</div>
+        <div className="overflow-y-auto px-5 pb-6 md:px-7 md:pb-7">{children}</div>
       </div>
     </div>
   )

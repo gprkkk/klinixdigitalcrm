@@ -143,11 +143,11 @@ export default function Reviews() {
   const totalReviews = REVIEWS.length
 
   return (
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-8">
       <section className="min-w-0">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-6 flex flex-wrap items-end justify-between gap-4 md:mb-7">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
               Avaliações
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -197,13 +197,13 @@ export default function Reviews() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             {filtered.map((r, idx) => {
               const palette = AVATAR_PALETTES[idx % AVATAR_PALETTES.length]
               return (
                 <article
                   key={r.id}
-                  className="card flex flex-col gap-4 p-6 transition hover:-translate-y-0.5"
+                  className="card flex flex-col gap-4 p-5 transition hover:-translate-y-0.5 md:p-6"
                 >
                   <div className="flex items-start gap-4">
                     <div className={`avatar ${palette} h-12 w-12`}>{r.initials}</div>

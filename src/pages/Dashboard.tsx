@@ -237,11 +237,11 @@ export default function Dashboard() {
         : 'Boa noite'
 
   return (
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:gap-8">
       <section className="min-w-0">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:flex-wrap md:items-end md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
               {greeting}, Dra. Klinix
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -249,7 +249,7 @@ export default function Dashboard() {
               <span className="font-medium capitalize text-slate-700 dark:text-slate-300">{monthLabel}</span>.
             </p>
           </div>
-          <Link to="/app/agenda" className="btn-primary">
+          <Link to="/app/agenda" className="btn-primary w-full justify-center md:w-auto">
             <Sparkles size={16} /> Novo agendamento
           </Link>
         </div>
@@ -266,8 +266,8 @@ export default function Dashboard() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-              <div className="card p-6 transition hover:-translate-y-0.5">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+              <div className="card p-5 transition hover:-translate-y-0.5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     Faturamento
@@ -276,7 +276,7 @@ export default function Dashboard() {
                     <DollarSign size={20} />
                   </div>
                 </div>
-                <div className="mt-5 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                <div className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:mt-5 md:text-3xl dark:text-slate-100">
                   {formatCurrency(stats.total)}
                 </div>
                 <div className="mt-1 flex items-center gap-1 text-xs font-medium text-emerald-600">
@@ -285,7 +285,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="card p-6 transition hover:-translate-y-0.5">
+              <div className="card p-5 transition hover:-translate-y-0.5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     Agendamentos
@@ -294,13 +294,13 @@ export default function Dashboard() {
                     <CalendarCheck size={20} />
                   </div>
                 </div>
-                <div className="mt-5 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                <div className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:mt-5 md:text-3xl dark:text-slate-100">
                   {stats.count}
                 </div>
                 <div className="mt-1 text-xs font-medium text-slate-500">Concluídos neste mês</div>
               </div>
 
-              <div className="card p-6 transition hover:-translate-y-0.5">
+              <div className="card p-5 transition hover:-translate-y-0.5 md:p-6">
                 <div className="flex items-center justify-between">
                   <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     Ticket médio
@@ -309,17 +309,17 @@ export default function Dashboard() {
                     <Receipt size={20} />
                   </div>
                 </div>
-                <div className="mt-5 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                <div className="mt-4 text-2xl font-bold tracking-tight text-slate-900 md:mt-5 md:text-3xl dark:text-slate-100">
                   {formatCurrency(stats.ticket)}
                 </div>
                 <div className="mt-1 text-xs font-medium text-slate-500">Média por atendimento</div>
               </div>
             </div>
 
-            <div className="card mt-6 p-7">
-              <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+            <div className="card mt-6 p-5 md:p-7">
+              <div className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-6">
                 <div>
-                  <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                  <h3 className="text-lg font-bold tracking-tight text-slate-900 md:text-xl dark:text-slate-100">
                     Faturamento por categoria
                   </h3>
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -338,7 +338,7 @@ export default function Dashboard() {
                   Nenhum atendimento concluído neste mês para gerar o gráfico.
                 </div>
               ) : (
-                <div className="h-72 w-full">
+                <div className="h-60 w-full md:h-72">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={categoryData} margin={{ top: 10, right: 16, left: -8, bottom: 5 }}>
                       <defs>
@@ -390,10 +390,10 @@ export default function Dashboard() {
               )}
             </div>
 
-            <div className="card mt-6 p-7">
+            <div className="card mt-6 p-5 md:p-7">
               <div className="mb-5 flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                  <h3 className="text-lg font-bold tracking-tight text-slate-900 md:text-xl dark:text-slate-100">
                     Próximos atendimentos
                   </h3>
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
