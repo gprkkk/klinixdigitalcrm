@@ -17,6 +17,18 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
         },
+        accent: {
+          50: '#fff1f5',
+          100: '#ffe4ec',
+          200: '#fecdd9',
+          300: '#fda4bc',
+          400: '#fb7299',
+          500: '#f4477d',
+          600: '#e02765',
+          700: '#bd1c55',
+          800: '#9a1849',
+          900: '#7e173f',
+        },
       },
       fontFamily: {
         sans: [
@@ -44,11 +56,19 @@ export default {
           'linear-gradient(135deg, #2563eb 0%, #06b6d4 100%)',
         'gradient-text':
           'linear-gradient(120deg, #0f172a 0%, #2563eb 45%, #06b6d4 100%)',
+        'gradient-pink':
+          'linear-gradient(135deg, #fb7299 0%, #f4477d 100%)',
+        'gradient-blue-pink':
+          'linear-gradient(135deg, #2563eb 0%, #f4477d 100%)',
+        'gradient-soft':
+          'linear-gradient(135deg, #eff6ff 0%, #fff1f5 100%)',
       },
       boxShadow: {
         glow: '0 20px 60px -20px rgba(37, 99, 235, 0.45)',
         'glow-cyan': '0 20px 60px -20px rgba(6, 182, 212, 0.45)',
+        'glow-pink': '0 20px 60px -20px rgba(244, 71, 125, 0.45)',
         soft: '0 30px 80px -30px rgba(15, 23, 42, 0.18)',
+        chic: '0 10px 30px -12px rgba(15, 23, 42, 0.08)',
       },
       animation: {
         'blob-slow': 'blob 18s ease-in-out infinite',

@@ -31,18 +31,25 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-50 via-white to-brand-50 px-4 dark:from-slate-950 dark:via-slate-900 dark:to-slate-900">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-4 dark:bg-slate-950">
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute -left-20 top-10 h-80 w-80 rounded-full bg-brand-400/30 blur-3xl" />
+        <div className="absolute -right-20 bottom-10 h-96 w-96 rounded-full bg-accent-300/30 blur-3xl" />
+      </div>
+
       <div className="w-full max-w-md">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-brand-600 text-white">
-            <Stethoscope size={24} />
+          <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-cta text-white shadow-glow">
+            <Stethoscope size={26} />
           </div>
-          <h1 className="text-2xl font-semibold text-slate-900 dark:text-slate-100">Klinix.digital</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Klinix.digital</h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">CRM para clínicas de estética</p>
         </div>
 
-        <div className="card p-6">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Entrar na sua conta</h2>
+        <div className="card p-7">
+          <h2 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+            Entrar na sua conta
+          </h2>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">Use seu e-mail e senha para acessar.</p>
 
           <form className="mt-6 space-y-4" onSubmit={handleSubmit}>

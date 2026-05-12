@@ -85,9 +85,9 @@ export const APPOINTMENT_STATUS_LABEL: Record<AppointmentStatus, string> = {
 }
 
 export const APPOINTMENT_STATUS_STYLE: Record<AppointmentStatus, string> = {
-  SCHEDULED: 'bg-blue-100 text-blue-700',
-  CONFIRMED: 'bg-emerald-100 text-emerald-700',
-  COMPLETED: 'bg-slate-200 text-slate-700',
-  CANCELLED: 'bg-red-100 text-red-700',
-  NO_SHOW: 'bg-amber-100 text-amber-700',
+  SCHEDULED: 'bg-accent-50 text-accent-700',
+  CONFIRMED: 'bg-emerald-50 text-emerald-700',
+  COMPLETED: 'bg-brand-50 text-brand-700',
+  CANCELLED: 'bg-red-50 text-red-700',
+  NO_SHOW: 'bg-amber-50 text-amber-700',
 }

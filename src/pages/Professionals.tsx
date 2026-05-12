@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Loader2, Pencil, Plus, Search, Trash2, UserCog } from 'lucide-react'
+import { Clock, Loader2, Pencil, Plus, Search, Trash2, UserCog } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { DAYS_OF_WEEK, Professional, ProfessionalSchedule } from '../lib/types'
 import PageHeader from '../components/PageHeader'
@@ -230,44 +230,73 @@ export default function Professionals() {
           }
         />
       ) : (
-        <div className="card overflow-hidden">
-          <table className="table-base">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Status</th>
-                <th>Horários</th>
-                <th className="text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((pro) => (
-                <tr key={pro.id}>
-                  <td className="font-medium text-slate-900 dark:text-slate-100">{pro.name}</td>
-                  <td>
-                    {pro.is_active === false ? (
-                      <span className="badge bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-300">Inativo</span>
-                    ) : (
-                      <span className="badge bg-emerald-100 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">Ativo</span>
-                    )}
-                  </td>
-                  <td>
-                    <span className="badge bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">{summarizeSchedule(pro.id)}</span>
-                  </td>
-                  <td>
-                    <div className="flex justify-end gap-2">
-                      <button type="button" className="btn-secondary" onClick={() => openEdit(pro)}>
-                        <Pencil size={14} /> Editar
-                      </button>
-                      <button type="button" className="btn-danger" onClick={() => handleDelete(pro)}>
-                        <Trash2 size={14} />
-                      </button>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((pro, idx) => {
+            const usePink = idx % 2 === 1
+            const initials =
+              pro.name
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map((p) => p[0]?.toUpperCase() ?? '')
+                .join('') || '?'
+            return (
+              <div
+                key={pro.id}
+                className="card flex flex-col gap-5 p-6 transition hover:-translate-y-0.5 hover:shadow-glow"
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight ${
+                      usePink
+                        ? 'bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200'
+                        : 'bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200'
+                    }`}
+                  >
+                    {initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                      {pro.name}
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                      {pro.is_active === false ? (
+                        <span className="badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+                          Inativo
+                        </span>
+                      ) : (
+                        <span className="badge bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+                          Ativo
+                        </span>
+                      )}
+                      <span className="badge bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+                        <Clock size={12} className="mr-1" />
+                        {summarizeSchedule(pro.id)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+                  <button
+                    type="button"
+                    className="btn-secondary !px-4 !py-2 text-xs"
+                    onClick={() => openEdit(pro)}
+                  >
+                    <Pencil size={14} /> Editar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-danger !px-3 !py-2"
+                    onClick={() => handleDelete(pro)}
+                    aria-label="Excluir profissional"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
 
