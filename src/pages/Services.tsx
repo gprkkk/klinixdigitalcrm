@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Pencil, Plus, Sparkles, Trash2, Loader2, Search } from 'lucide-react'
+import { Clock as ClockIcon, Pencil, Plus, Sparkles, Trash2, Loader2, Search, Tag } from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { Category, Service } from '../lib/types'
 import { formatCurrency } from '../lib/format'
@@ -187,54 +187,71 @@ export default function Services() {
           }
         />
       ) : (
-        <div className="card overflow-hidden">
-          <table className="table-base">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Categoria</th>
-                <th>Duração</th>
-                <th>Preço</th>
-                <th className="text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((svc) => (
-                <tr key={svc.id}>
-                  <td className="font-medium text-slate-900 dark:text-slate-100">{svc.name}</td>
-                  <td>
-                    {svc.categories?.name ? (
-                      <span className="badge bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">{svc.categories.name}</span>
-                    ) : (
-                      <span className="text-slate-400 dark:text-slate-500">—</span>
-                    )}
-                  </td>
-                  <td>{svc.duration_minutes} min</td>
-                  <td>{formatCurrency(svc.price)}</td>
-                  <td>
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        className="btn-secondary"
-                        onClick={() => openEdit(svc)}
-                        aria-label="Editar"
-                      >
-                        <Pencil size={14} /> Editar
-                      </button>
-                      <button
-                        type="button"
-                        className="btn-danger"
-                        onClick={() => handleDelete(svc)}
-                        aria-label="Excluir"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((svc, idx) => {
+            const usePink = idx % 2 === 1
+            return (
+              <div
+                key={svc.id}
+                className="card flex flex-col gap-5 p-6 transition hover:-translate-y-0.5 hover:shadow-glow-pink"
+              >
+                <div className="flex items-start gap-4">
+                  <div className={usePink ? 'icon-pill icon-pill-pink' : 'icon-pill icon-pill-blue'}>
+                    <Sparkles size={20} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+                      {svc.name}
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    {svc.categories?.name && (
+                      <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-accent-50 px-2.5 py-0.5 text-xs font-semibold text-accent-700 dark:bg-accent-500/15 dark:text-accent-300">
+                        <Tag size={11} />
+                        {svc.categories.name}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-slate-50 px-4 py-3 dark:bg-slate-800/60">
+                    <div className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      <ClockIcon size={11} /> Duração
+                    </div>
+                    <div className="mt-1 text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                      {svc.duration_minutes} min
+                    </div>
+                  </div>
+                  <div className="rounded-2xl bg-gradient-soft px-4 py-3 dark:bg-slate-800/60">
+                    <div className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                      Preço
+                    </div>
+                    <div className="mt-1 text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                      {formatCurrency(svc.price)}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+                  <button
+                    type="button"
+                    className="btn-secondary !px-4 !py-2 text-xs"
+                    onClick={() => openEdit(svc)}
+                    aria-label="Editar"
+                  >
+                    <Pencil size={14} /> Editar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-danger !px-3 !py-2"
+                    onClick={() => handleDelete(svc)}
+                    aria-label="Excluir"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
 

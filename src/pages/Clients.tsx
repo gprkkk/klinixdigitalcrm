@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Loader2, Pencil, Plus, Search, Trash2, Users } from 'lucide-react'
+import { Cake, Loader2, Pencil, Phone, Plus, Search, Trash2, Users } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { Client } from '../lib/types'
@@ -7,6 +7,14 @@ import { formatDate } from '../lib/format'
 import PageHeader from '../components/PageHeader'
 import Modal from '../components/Modal'
 import EmptyState from '../components/EmptyState'
+
+const getInitials = (name: string): string =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? '')
+    .join('') || '?'
 
 interface ClientFormState {
   id?: string
@@ -155,40 +163,70 @@ export default function Clients() {
           }
         />
       ) : (
-        <div className="card overflow-hidden">
-          <table className="table-base">
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>WhatsApp</th>
-                <th>Nascimento</th>
-                <th className="text-right">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((c) => (
-                <tr key={c.id}>
-                  <td>
-                    <Link to={`/clientes/${c.id}`} className="font-medium text-brand-700 hover:underline dark:text-brand-300">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((c, idx) => {
+            const usePink = idx % 2 === 1
+            return (
+              <div
+                key={c.id}
+                className="card flex flex-col gap-5 p-6 transition hover:-translate-y-0.5 hover:shadow-glow"
+              >
+                <div className="flex items-start gap-4">
+                  <div
+                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight ${
+                      usePink
+                        ? 'bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200'
+                        : 'bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200'
+                    }`}
+                  >
+                    {getInitials(c.full_name)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      to={`/app/clientes/${c.id}`}
+                      className="block truncate text-base font-semibold tracking-tight text-slate-900 hover:text-brand-700 dark:text-slate-100 dark:hover:text-brand-300"
+                    >
                       {c.full_name}
                     </Link>
-                  </td>
-                  <td>{c.whatsapp || <span className="text-slate-400 dark:text-slate-500">—</span>}</td>
-                  <td>{c.birth_date ? formatDate(c.birth_date) : <span className="text-slate-400 dark:text-slate-500">—</span>}</td>
-                  <td>
-                    <div className="flex justify-end gap-2">
-                      <button type="button" className="btn-secondary" onClick={() => openEdit(c)}>
-                        <Pencil size={14} /> Editar
-                      </button>
-                      <button type="button" className="btn-danger" onClick={() => handleDelete(c)}>
-                        <Trash2 size={14} />
-                      </button>
+                    <div className="mt-1 flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                      <Phone size={14} className="text-brand-500" />
+                      <span className="truncate">{c.whatsapp || '—'}</span>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                  {c.birth_date && (
+                    <span className="badge bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-300">
+                      <Cake size={12} className="mr-1" />
+                      {formatDate(c.birth_date)}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+                  <Link
+                    to={`/app/clientes/${c.id}`}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  >
+                    Ver ficha
+                  </Link>
+                  <button
+                    type="button"
+                    className="btn-secondary !px-4 !py-2 text-xs"
+                    onClick={() => openEdit(c)}
+                  >
+                    <Pencil size={14} /> Editar
+                  </button>
+                  <button
+                    type="button"
+                    className="btn-danger !px-3 !py-2"
+                    onClick={() => handleDelete(c)}
+                    aria-label="Excluir cliente"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </div>
+            )
+          })}
         </div>
       )}
 

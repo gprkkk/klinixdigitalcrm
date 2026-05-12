@@ -154,7 +154,7 @@ export default function ClientDetail() {
   if (!client) {
     return (
       <div>
-        <button type="button" className="btn-secondary mb-4" onClick={() => navigate('/clientes')}>
+        <button type="button" className="btn-secondary mb-4" onClick={() => navigate('/app/clientes')}>
           <ArrowLeft size={16} /> Voltar
         </button>
         <div className="card p-6 text-slate-500 dark:text-slate-400">Cliente não encontrado.</div>
@@ -168,51 +168,51 @@ export default function ClientDetail() {
         title={client.full_name}
         description="Perfil do cliente, ficha clínica e histórico de atendimentos."
         actions={
-          <Link to="/clientes" className="btn-secondary">
+          <Link to="/app/clientes" className="btn-secondary">
             <ArrowLeft size={16} /> Voltar
           </Link>
         }
       />
 
-      <div className="card mb-5 grid grid-cols-1 gap-4 p-5 md:grid-cols-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+      <div className="card mb-5 grid grid-cols-1 gap-6 p-6 md:grid-cols-3">
+        <div className="flex items-center gap-4">
+          <div className="icon-pill icon-pill-blue">
             <UserIcon size={20} />
           </div>
-          <div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Nome</div>
-            <div className="font-medium text-slate-900 dark:text-slate-100">{client.full_name}</div>
+          <div className="min-w-0">
+            <div className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">Nome</div>
+            <div className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{client.full_name}</div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+        <div className="flex items-center gap-4">
+          <div className="icon-pill icon-pill-pink">
             <MessageCircle size={18} />
           </div>
-          <div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">WhatsApp</div>
-            <div className="font-medium text-slate-900 dark:text-slate-100">{client.whatsapp || '—'}</div>
+          <div className="min-w-0">
+            <div className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">WhatsApp</div>
+            <div className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{client.whatsapp || '—'}</div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+        <div className="flex items-center gap-4">
+          <div className="icon-pill icon-pill-cyan">
             <CalendarDays size={18} />
           </div>
-          <div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Nascimento</div>
-            <div className="font-medium text-slate-900 dark:text-slate-100">
+          <div className="min-w-0">
+            <div className="text-xs font-medium uppercase tracking-wider text-slate-400 dark:text-slate-500">Nascimento</div>
+            <div className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
               {client.birth_date ? formatDate(client.birth_date) : '—'}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mb-4 flex items-center gap-1 rounded-xl border border-slate-200 bg-white p-1 dark:border-slate-800 dark:bg-slate-900">
+      <div className="mb-5 inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <button
           type="button"
           onClick={() => setTab('anamnesis')}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+          className={`flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition ${
             tab === 'anamnesis'
-              ? 'bg-brand-600 text-white dark:bg-brand-600'
+              ? 'bg-gradient-cta text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
           }`}
         >
@@ -221,9 +221,9 @@ export default function ClientDetail() {
         <button
           type="button"
           onClick={() => setTab('history')}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition ${
+          className={`flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium transition ${
             tab === 'history'
-              ? 'bg-brand-600 text-white dark:bg-brand-600'
+              ? 'bg-gradient-pink text-white shadow-sm'
               : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
           }`}
         >

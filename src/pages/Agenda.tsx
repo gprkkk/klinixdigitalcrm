@@ -233,14 +233,14 @@ export default function Agenda() {
         }
       />
 
-      <div className="card mb-4 flex flex-wrap items-center gap-3 p-4">
-        <button type="button" className="btn-secondary" onClick={() => shiftDay(-1)} aria-label="Dia anterior">
+      <div className="card mb-5 flex flex-wrap items-center gap-3 p-5">
+        <button type="button" className="btn-secondary !px-3" onClick={() => shiftDay(-1)} aria-label="Dia anterior">
           <ChevronLeft size={16} />
         </button>
         <button type="button" className="btn-secondary" onClick={goToday}>
           Hoje
         </button>
-        <button type="button" className="btn-secondary" onClick={() => shiftDay(1)} aria-label="Próximo dia">
+        <button type="button" className="btn-secondary !px-3" onClick={() => shiftDay(1)} aria-label="Próximo dia">
           <ChevronRight size={16} />
         </button>
         <input
@@ -269,7 +269,7 @@ export default function Agenda() {
         </div>
       </div>
 
-      <div className="mb-4 text-sm font-medium capitalize text-slate-700 dark:text-slate-200">{dayLabel(ymdToDate(date))}</div>
+      <div className="mb-5 text-sm font-semibold capitalize tracking-tight text-slate-700 dark:text-slate-200">{dayLabel(ymdToDate(date))}</div>
 
       {error && <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">{error}</div>}
 
@@ -291,28 +291,33 @@ export default function Agenda() {
       ) : (
         <div className="space-y-3">
           {filtered.map((a) => (
-            <div key={a.id} className="card flex flex-wrap items-center gap-4 p-4">
-              <div className="flex min-w-[100px] flex-col items-center justify-center rounded-xl bg-brand-50 px-4 py-2 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
+            <div
+              key={a.id}
+              className="card flex flex-wrap items-center gap-5 p-5 transition hover:-translate-y-0.5 hover:shadow-glow-pink"
+            >
+              <div className="flex min-w-[110px] flex-col items-center justify-center rounded-2xl bg-accent-50 px-4 py-3 text-accent-700 dark:bg-accent-500/15 dark:text-accent-300">
                 <Clock size={14} />
-                <div className="mt-1 text-sm font-semibold">{formatTimeStr(a.start_time)}</div>
-                <div className="text-xs text-slate-500 dark:text-slate-400">{formatTimeStr(a.end_time)}</div>
+                <div className="mt-1 text-sm font-bold tracking-tight">{formatTimeStr(a.start_time)}</div>
+                <div className="text-xs text-accent-500/80 dark:text-accent-300/70">
+                  até {formatTimeStr(a.end_time)}
+                </div>
               </div>
               <div className="min-w-[200px] flex-1">
-                <div className="font-semibold text-slate-900 dark:text-slate-100">
+                <div className="text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                   {a.services?.name ?? 'Serviço removido'}
                 </div>
-                <div className="mt-1 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-                  <UserIcon size={14} />
+                <div className="mt-1.5 flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
+                  <UserIcon size={14} className="text-brand-500" />
                   {a.clients?.full_name ?? '—'}
                 </div>
                 <div className="text-xs text-slate-500 dark:text-slate-400">com {a.professionals?.name ?? '—'}</div>
               </div>
               <div className="flex flex-col items-end gap-2">
-                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <span className="text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">
                   {formatCurrency(a.price_charged)}
                 </span>
                 <select
-                  className={`badge ${APPOINTMENT_STATUS_STYLE[a.status]} cursor-pointer border-0 bg-transparent`}
+                  className={`badge ${APPOINTMENT_STATUS_STYLE[a.status]} cursor-pointer border-0`}
                   value={a.status}
                   onChange={(e) => handleStatusChange(a, e.target.value as AppointmentStatus)}
                   style={{ appearance: 'none' }}
@@ -324,7 +329,12 @@ export default function Agenda() {
                   ))}
                 </select>
               </div>
-              <button type="button" className="btn-danger" onClick={() => handleDelete(a)}>
+              <button
+                type="button"
+                className="btn-danger !px-3"
+                onClick={() => handleDelete(a)}
+                aria-label="Excluir agendamento"
+              >
                 <Trash2 size={14} />
               </button>
             </div>

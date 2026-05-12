@@ -88,52 +88,64 @@ export default function Dashboard() {
         </div>
       ) : (
         <>
-          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="card p-5">
+          <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="card p-6 transition hover:-translate-y-0.5 hover:shadow-glow">
               <div className="flex items-center justify-between">
                 <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Faturamento total</div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-300">
-                  <DollarSign size={18} />
+                <div className="icon-pill icon-pill-blue">
+                  <DollarSign size={20} />
                 </div>
               </div>
-              <div className="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+              <div className="mt-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 {formatCurrency(stats.total)}
               </div>
               <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">Atendimentos concluídos no mês</div>
             </div>
 
-            <div className="card p-5">
+            <div className="card p-6 transition hover:-translate-y-0.5 hover:shadow-glow-pink">
               <div className="flex items-center justify-between">
                 <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Agendamentos</div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/10 dark:text-brand-300">
-                  <CalendarCheck size={18} />
+                <div className="icon-pill icon-pill-pink">
+                  <CalendarCheck size={20} />
                 </div>
               </div>
-              <div className="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-100">{stats.count}</div>
+              <div className="mt-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                {stats.count}
+              </div>
               <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">Concluídos no mês atual</div>
             </div>
 
-            <div className="card p-5">
+            <div className="card p-6 transition hover:-translate-y-0.5 hover:shadow-glow-cyan">
               <div className="flex items-center justify-between">
                 <div className="text-sm font-medium text-slate-500 dark:text-slate-400">Ticket médio</div>
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-300">
-                  <Receipt size={18} />
+                <div className="icon-pill icon-pill-cyan">
+                  <Receipt size={20} />
                 </div>
               </div>
-              <div className="mt-3 text-2xl font-semibold text-slate-900 dark:text-slate-100">
+              <div className="mt-4 text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 {formatCurrency(stats.ticket)}
               </div>
               <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">Média por atendimento concluído</div>
             </div>
           </div>
 
-          <div className="card p-5">
-            <div className="mb-4 flex items-center justify-between">
+          <div className="card p-6">
+            <div className="mb-5 flex items-center justify-between">
               <div>
-                <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100">
+                <h3 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-100">
                   Faturamento por categoria
                 </h3>
-                <p className="text-sm text-slate-500 dark:text-slate-400">Soma de atendimentos concluídos no mês.</p>
+                <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+                  Soma de atendimentos concluídos no mês.
+                </p>
+              </div>
+              <div className="hidden items-center gap-3 text-xs font-medium text-slate-500 sm:flex">
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-brand-500" /> Início do range
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="h-2.5 w-2.5 rounded-full bg-accent-500" /> Topo do range
+                </span>
               </div>
             </div>
             {categoryData.length === 0 ? (
@@ -144,17 +156,23 @@ export default function Dashboard() {
               <div className="h-72 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={categoryData} margin={{ top: 5, right: 8, left: -12, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#e2e8f0'} />
+                    <defs>
+                      <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f4477d" stopOpacity={0.95} />
+                        <stop offset="100%" stopColor="#2563eb" stopOpacity={0.9} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#334155' : '#eef2f7'} vertical={false} />
                     <XAxis
                       dataKey="category"
                       tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 12 }}
                       tickLine={false}
-                      axisLine={{ stroke: isDark ? '#334155' : '#e2e8f0' }}
+                      axisLine={false}
                     />
                     <YAxis
                       tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 12 }}
                       tickLine={false}
-                      axisLine={{ stroke: isDark ? '#334155' : '#e2e8f0' }}
+                      axisLine={false}
                       tickFormatter={(v: number) =>
                         v.toLocaleString('pt-BR', {
                           notation: 'compact',
@@ -164,18 +182,19 @@ export default function Dashboard() {
                       }
                     />
                     <Tooltip
-                      cursor={{ fill: isDark ? '#1e293b' : '#f1f5f9' }}
+                      cursor={{ fill: isDark ? '#1e293b' : '#fff1f5' }}
                       contentStyle={{
-                        borderRadius: 12,
+                        borderRadius: 16,
                         border: `1px solid ${isDark ? '#334155' : '#e2e8f0'}`,
                         backgroundColor: isDark ? '#0f172a' : '#ffffff',
                         color: isDark ? '#e2e8f0' : '#0f172a',
                         fontSize: 12,
+                        boxShadow: '0 10px 30px -12px rgba(15, 23, 42, 0.18)',
                       }}
                       formatter={(v: number) => formatCurrency(v)}
                       labelClassName="font-medium"
                     />
-                    <Bar dataKey="revenue" fill={isDark ? '#60a5fa' : '#2563eb'} radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="revenue" fill="url(#revenueGradient)" radius={[10, 10, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
