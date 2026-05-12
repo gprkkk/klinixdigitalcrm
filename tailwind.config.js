@@ -62,6 +62,10 @@ export default {
           'linear-gradient(135deg, #2563eb 0%, #f4477d 100%)',
         'gradient-soft':
           'linear-gradient(135deg, #eff6ff 0%, #fff1f5 100%)',
+        'gradient-mint':
+          'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)',
+        'gradient-lavender':
+          'linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)',
       },
       boxShadow: {
         glow: '0 20px 60px -20px rgba(37, 99, 235, 0.45)',
@@ -69,6 +73,8 @@ export default {
         'glow-pink': '0 20px 60px -20px rgba(244, 71, 125, 0.45)',
         soft: '0 30px 80px -30px rgba(15, 23, 42, 0.18)',
         chic: '0 10px 30px -12px rgba(15, 23, 42, 0.08)',
+        card: '0 8px 30px rgba(15, 23, 42, 0.04)',
+        pillow: '0 24px 80px -32px rgba(15, 23, 42, 0.16)',
       },
       animation: {
         'blob-slow': 'blob 18s ease-in-out infinite',
