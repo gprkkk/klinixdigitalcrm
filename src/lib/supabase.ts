@@ -1,17 +1,50 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+let cachedClient: SupabaseClient | null = null
+let warnedMissingEnv = false
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  // eslint-disable-next-line no-console
-  console.error('Supabase env vars não configuradas. Verifique o arquivo .env')
+function readEnv(): { url?: string; key?: string } {
+  return {
+    url: import.meta.env.VITE_SUPABASE_URL,
+    key: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  }
 }
 
-export const supabase = createClient(supabaseUrl ?? '', supabaseAnonKey ?? '', {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
+export function isSupabaseConfigured(): boolean {
+  const { url, key } = readEnv()
+  return Boolean(url && key)
+}
+
+function getClient(): SupabaseClient {
+  if (cachedClient) return cachedClient
+  const { url, key } = readEnv()
+  if (!url || !key) {
+    if (!warnedMissingEnv) {
+      warnedMissingEnv = true
+      // eslint-disable-next-line no-console
+      console.error(
+        'Supabase env vars não configuradas. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env. ' +
+          'A landing page pública continua funcionando; rotas autenticadas (/login, /app/*) precisam dessas variáveis.',
+      )
+    }
+    throw new Error(
+      'Supabase env vars não configuradas. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.',
+    )
+  }
+  cachedClient = createClient(url, key, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  })
+  return cachedClient
+}
+
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop, receiver) {
+    const client = getClient()
+    const value = Reflect.get(client, prop, receiver)
+    return typeof value === 'function' ? value.bind(client) : value
   },
-})
+}) as SupabaseClient
