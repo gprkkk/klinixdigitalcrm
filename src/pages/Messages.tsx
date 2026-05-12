@@ -216,9 +216,9 @@ export default function Messages() {
 
   return (
     <div>
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:flex-wrap md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
             Mensagens
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
@@ -251,8 +251,8 @@ export default function Messages() {
         </div>
       </div>
 
-      <div className="card grid grid-cols-1 overflow-hidden lg:grid-cols-[320px_minmax(0,1fr)]">
-        <aside className="border-r border-slate-100 dark:border-slate-800">
+      <div className="card grid grid-cols-1 overflow-hidden xl:grid-cols-[320px_minmax(0,1fr)]">
+        <aside className="border-b border-slate-100 xl:border-b-0 xl:border-r dark:border-slate-800">
           <div className="px-5 py-5">
             <div className="relative">
               <Search size={14} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -323,8 +323,8 @@ export default function Messages() {
         </aside>
 
         {selected ? (
-          <section className="flex h-[640px] flex-col">
-            <header className="flex items-center gap-3 border-b border-slate-100 px-6 py-4 dark:border-slate-800">
+          <section className="flex h-[70vh] min-h-[480px] flex-col md:h-[640px]">
+            <header className="flex items-center gap-3 border-b border-slate-100 px-4 py-4 md:px-6 dark:border-slate-800">
               <div className="relative">
                 <div className={`avatar ${PALETTES[selected.paletteIndex % PALETTES.length]} h-11 w-11`}>
                   {selected.initials}
@@ -352,7 +352,7 @@ export default function Messages() {
               </button>
             </header>
 
-            <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50/60 px-6 py-6 dark:bg-slate-950/40">
+            <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50/60 px-4 py-5 md:px-6 md:py-6 dark:bg-slate-950/40">
               {selected.messages.map((m) => {
                 const isOutgoing = m.author === 'me' || m.author === 'ai'
                 const bubble =
@@ -398,7 +398,7 @@ export default function Messages() {
 
             <form
               onSubmit={handleSend}
-              className="flex items-center gap-2 border-t border-slate-100 px-6 py-4 dark:border-slate-800"
+              className="flex items-center gap-2 border-t border-slate-100 px-3 py-3 md:px-6 md:py-4 dark:border-slate-800"
             >
               <button type="button" className="icon-btn" aria-label="Anexar">
                 <Paperclip size={14} />
@@ -419,7 +419,7 @@ export default function Messages() {
             </form>
           </section>
         ) : (
-          <section className="flex h-[640px] flex-col items-center justify-center gap-3 text-center">
+          <section className="flex h-[60vh] min-h-[320px] flex-col items-center justify-center gap-3 text-center md:h-[640px]">
             <MessageCircle size={36} className="text-slate-300" />
             <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">
               Selecione uma conversa

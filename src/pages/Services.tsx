@@ -161,16 +161,20 @@ export default function Services() {
 
   return (
     <>
-      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:flex-wrap md:items-end md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
             Tratamentos
           </h1>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Catálogo de procedimentos com duração, preço e categoria
           </p>
         </div>
-        <button type="button" className="btn-primary" onClick={openCreate}>
+        <button
+          type="button"
+          className="btn-primary w-full justify-center md:w-auto"
+          onClick={openCreate}
+        >
           <Plus size={16} /> Novo tratamento
         </button>
       </div>
@@ -238,7 +242,7 @@ export default function Services() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 xl:grid-cols-3">
           {filtered.map((svc, idx) => {
             const gradient = CARD_GRADIENTS[idx % CARD_GRADIENTS.length]
             return (

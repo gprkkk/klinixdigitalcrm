@@ -1,4 +1,5 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import {
   LayoutDashboard,
   CalendarDays,
@@ -12,6 +13,8 @@ import {
   Moon,
   Search,
   Bell,
+  Menu,
+  X,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
@@ -30,6 +33,25 @@ export default function Layout() {
   const { user, signOut } = useAuth()
   const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
+  const location = useLocation()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  useEffect(() => {
+    setDrawerOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!drawerOpen) return
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setDrawerOpen(false)
+    }
+    document.body.style.overflow = 'hidden'
+    window.addEventListener('keydown', handler)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', handler)
+    }
+  }, [drawerOpen])
 
   const handleSignOut = async () => {
     await signOut()
@@ -39,10 +61,10 @@ export default function Layout() {
   const isDark = theme === 'dark'
   const userInitials = (user?.email ?? 'KL').slice(0, 2).toUpperCase()
 
-  return (
-    <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950">
-      <aside className="flex w-64 shrink-0 flex-col bg-white px-5 py-7 dark:bg-slate-900">
-        <div className="flex items-center gap-3 pb-7">
+  const sidebarContent = (
+    <>
+      <div className="flex items-center justify-between gap-3 pb-7">
+        <div className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-cta text-white shadow-glow">
             <Sparkles size={20} />
           </div>
@@ -55,8 +77,17 @@ export default function Layout() {
             </div>
           </div>
         </div>
+        <button
+          type="button"
+          onClick={() => setDrawerOpen(false)}
+          className="icon-btn h-9 w-9 md:hidden"
+          aria-label="Fechar menu"
+        >
+          <X size={16} />
+        </button>
+      </div>
 
-        <nav className="flex-1 space-y-1.5">
+      <nav className="flex-1 space-y-1.5 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon
             return (
@@ -92,7 +123,7 @@ export default function Layout() {
           })}
         </nav>
 
-        <div className="space-y-2 pt-5">
+      <div className="space-y-2 pt-5">
           <button
             type="button"
             onClick={toggleTheme}
@@ -133,10 +164,65 @@ export default function Layout() {
             </button>
           </div>
         </div>
+    </>
+  )
+
+  return (
+    <div className="flex h-screen w-full bg-slate-50 dark:bg-slate-950">
+      {/* Desktop sidebar */}
+      <aside className="hidden w-64 shrink-0 flex-col bg-white px-5 py-7 md:flex dark:bg-slate-900">
+        {sidebarContent}
       </aside>
 
+      {/* Mobile drawer */}
+      <div
+        className={`fixed inset-0 z-50 md:hidden ${drawerOpen ? '' : 'pointer-events-none'}`}
+        aria-hidden={!drawerOpen}
+      >
+        <button
+          type="button"
+          tabIndex={drawerOpen ? 0 : -1}
+          aria-label="Fechar menu"
+          onClick={() => setDrawerOpen(false)}
+          className={`absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity dark:bg-slate-950/70 ${
+            drawerOpen ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+        <aside
+          className={`absolute inset-y-0 left-0 flex w-72 max-w-[85%] flex-col bg-white px-5 py-6 shadow-pillow transition-transform duration-300 ease-out dark:bg-slate-900 ${
+            drawerOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          {sidebarContent}
+        </aside>
+      </div>
+
       <main className="flex-1 overflow-y-auto">
-        <header className="sticky top-0 z-30 flex flex-wrap items-center gap-4 bg-slate-50/85 px-10 py-6 backdrop-blur-xl dark:bg-slate-950/80">
+        {/* Mobile top bar */}
+        <div className="sticky top-0 z-30 flex items-center justify-between gap-3 bg-white/90 px-4 py-3 shadow-card backdrop-blur-xl md:hidden dark:bg-slate-900/90">
+          <button
+            type="button"
+            onClick={() => setDrawerOpen(true)}
+            aria-label="Abrir menu"
+            className="icon-btn h-10 w-10"
+          >
+            <Menu size={18} />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-cta text-white shadow-glow">
+              <Sparkles size={14} />
+            </div>
+            <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              Klinix<span className="text-slate-400">.digital</span>
+            </span>
+          </div>
+          <button type="button" className="icon-btn h-10 w-10" aria-label="Notificações">
+            <Bell size={16} />
+          </button>
+        </div>
+
+        {/* Desktop header */}
+        <header className="sticky top-0 z-20 hidden flex-wrap items-center gap-4 bg-slate-50/85 px-6 py-5 backdrop-blur-xl md:flex md:px-10 md:py-6 dark:bg-slate-950/80">
           <div className="relative w-full max-w-md">
             <Search
               size={16}
@@ -165,7 +251,7 @@ export default function Layout() {
             </div>
           </div>
         </header>
-        <div className="px-10 pb-10">
+        <div className="px-4 pb-10 pt-5 md:px-10 md:pt-0">
           <Outlet />
         </div>
       </main>

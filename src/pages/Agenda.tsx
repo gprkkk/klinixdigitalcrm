@@ -97,6 +97,7 @@ export default function Agenda() {
   const [schedules, setSchedules] = useState<ProfessionalSchedule[]>([])
   const [proFilter, setProFilter] = useState<string>('all')
   const [selectedAppointmentId, setSelectedAppointmentId] = useState<string | null>(null)
+  const [selectedDate, setSelectedDate] = useState<Date>(() => new Date())
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -183,6 +184,14 @@ export default function Agenda() {
   const goThisWeek = () => {
     setWeekAnchor(startOfWeek(new Date()))
     setSelectedAppointmentId(null)
+  }
+
+  const shiftDay = (delta: number) => {
+    setSelectedDate((d) => addDays(d, delta))
+  }
+
+  const goToday = () => {
+    setSelectedDate(new Date())
   }
 
   const openCreate = (date?: Date) => {
@@ -295,24 +304,34 @@ export default function Agenda() {
 
   const weekRangeLabel = `${weekDays[0].toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })} – ${weekDays[6].toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}`
 
+  const todayList = useMemo(() => {
+    const list = appointmentsByDay.get(dateToYmd(selectedDate)) ?? []
+    return [...list].sort((a, b) => a.start_time.localeCompare(b.start_time))
+  }, [appointmentsByDay, selectedDate])
+
   return (
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1fr)_340px]">
+    <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_340px] xl:gap-8">
       <section className="min-w-0">
-        <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div className="mb-6 flex flex-col gap-4 md:mb-7 md:flex-row md:flex-wrap md:items-end md:justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl dark:text-slate-100">
               Agenda
             </h1>
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
               Visualize e crie agendamentos respeitando a grade dos profissionais
             </p>
           </div>
-          <button type="button" className="btn-primary" onClick={() => openCreate()}>
+          <button
+            type="button"
+            className="btn-primary w-full justify-center md:w-auto"
+            onClick={() => openCreate()}
+          >
             <Plus size={16} /> Novo agendamento
           </button>
         </div>
 
-        <div className="card mb-6 flex flex-wrap items-center gap-3 p-4">
+        {/* Desktop week navigator */}
+        <div className="card mb-6 hidden flex-wrap items-center gap-3 p-4 md:flex">
           <button
             type="button"
             className="icon-btn"
@@ -354,13 +373,65 @@ export default function Agenda() {
           </div>
         </div>
 
+        {/* Mobile day navigator */}
+        <div className="card mb-5 flex flex-col gap-3 p-4 md:hidden">
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={() => shiftDay(-1)}
+              aria-label="Dia anterior"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <div className="flex-1 text-center">
+              <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                {selectedDate.toLocaleDateString('pt-BR', { weekday: 'long' })}
+              </div>
+              <div className="text-sm font-bold capitalize text-slate-900 dark:text-slate-100">
+                {selectedDate.toLocaleDateString('pt-BR', {
+                  day: '2-digit',
+                  month: 'long',
+                  year: 'numeric',
+                })}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="icon-btn"
+              onClick={() => shiftDay(1)}
+              aria-label="Próximo dia"
+            >
+              <ChevronRight size={16} />
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <button type="button" className="btn-secondary flex-1 justify-center !py-2.5" onClick={goToday}>
+              Hoje
+            </button>
+            <select
+              className="input flex-1 !py-2.5"
+              value={proFilter}
+              onChange={(e) => setProFilter(e.target.value)}
+            >
+              <option value="all">Todos os profissionais</option>
+              {professionals.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         {error && (
           <div className="mb-5 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
             {error}
           </div>
         )}
 
-        <div className="card overflow-hidden">
+        {/* Desktop week grid */}
+        <div className="card hidden overflow-hidden md:block">
           {loading ? (
             <div className="flex items-center justify-center px-6 py-24 text-slate-500 dark:text-slate-400">
               <Loader2 size={20} className="mr-2 animate-spin" /> Carregando agenda...
@@ -453,6 +524,71 @@ export default function Agenda() {
                 </div>
               </div>
             </div>
+          )}
+        </div>
+
+        {/* Mobile day list */}
+        <div className="md:hidden">
+          {loading ? (
+            <div className="card flex items-center justify-center px-6 py-16 text-slate-500 dark:text-slate-400">
+              <Loader2 size={20} className="mr-2 animate-spin" /> Carregando agenda...
+            </div>
+          ) : todayList.length === 0 ? (
+            <div className="card flex flex-col items-center gap-3 px-6 py-14 text-center">
+              <CalendarDays size={28} className="text-slate-300" />
+              <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                Nenhum atendimento neste dia
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Toque em “Novo agendamento” para criar.
+              </p>
+            </div>
+          ) : (
+            <ol className="space-y-3">
+              {todayList.map((a, idx) => {
+                const variant = idx % 3
+                const variantClass =
+                  variant === 0
+                    ? 'border-l-brand-500 bg-brand-50/50 dark:bg-brand-500/10'
+                    : variant === 1
+                      ? 'border-l-accent-500 bg-accent-50/50 dark:bg-accent-500/10'
+                      : 'border-l-cyan-500 bg-cyan-50/50 dark:bg-cyan-500/10'
+                return (
+                  <li key={a.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedAppointmentId(a.id)}
+                      className={`flex w-full items-center gap-3 rounded-2xl border-l-4 bg-white p-4 text-left shadow-card transition active:scale-[0.99] ${variantClass}`}
+                    >
+                      <div className="flex flex-col items-center justify-center rounded-2xl bg-white/80 px-3 py-2 shadow-card dark:bg-slate-900/60">
+                        <span className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                          {formatTimeStr(a.start_time)}
+                        </span>
+                        <span className="text-[10px] uppercase tracking-wider text-slate-400">
+                          {formatTimeStr(a.end_time)}
+                        </span>
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-sm font-bold text-slate-900 dark:text-slate-100">
+                          {a.services?.name ?? 'Serviço'}
+                        </div>
+                        <div className="truncate text-xs text-slate-500 dark:text-slate-400">
+                          {a.clients?.full_name ?? '—'}
+                        </div>
+                        <div className="mt-1 truncate text-[11px] text-slate-400">
+                          {a.professionals?.name ?? '—'}
+                        </div>
+                      </div>
+                      <span
+                        className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold ${APPOINTMENT_STATUS_STYLE[a.status]}`}
+                      >
+                        {APPOINTMENT_STATUS_LABEL[a.status]}
+                      </span>
+                    </button>
+                  </li>
+                )
+              })}
+            </ol>
           )}
         </div>
       </section>
