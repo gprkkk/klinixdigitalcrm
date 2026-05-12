@@ -13,7 +13,7 @@ export default function Login() {
   const [error, setError] = useState<string | null>(null)
 
   if (!authLoading && session) {
-    const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/'
+    const from = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/app'
     return <Navigate to={from} replace />
   }
 
@@ -27,7 +27,7 @@ export default function Login() {
       setError(err === 'Invalid login credentials' ? 'Credenciais inválidas.' : err)
       return
     }
-    navigate('/', { replace: true })
+    navigate('/app', { replace: true })
   }
 
   return (

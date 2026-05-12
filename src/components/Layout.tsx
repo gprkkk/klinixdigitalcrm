@@ -14,11 +14,11 @@ import { useAuth } from '../contexts/AuthContext'
 import { useTheme } from '../contexts/ThemeContext'
 
 const navItems = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
-  { to: '/agenda', label: 'Agenda', icon: Calendar },
-  { to: '/clientes', label: 'Clientes', icon: Users },
-  { to: '/profissionais', label: 'Profissionais', icon: UserCog },
-  { to: '/servicos', label: 'Serviços', icon: Sparkles },
+  { to: '/app', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/app/agenda', label: 'Agenda', icon: Calendar },
+  { to: '/app/clientes', label: 'Clientes', icon: Users },
+  { to: '/app/profissionais', label: 'Profissionais', icon: UserCog },
+  { to: '/app/servicos', label: 'Serviços', icon: Sparkles },
 ]
 
 export default function Layout() {
