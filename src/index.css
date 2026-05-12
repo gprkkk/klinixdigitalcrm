@@ -36,28 +36,40 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-cta px-5 py-2.5 text-sm font-semibold text-white shadow-chic transition hover:shadow-glow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-slate-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-cta px-7 py-3 text-sm font-semibold text-white shadow-chic transition hover:shadow-glow hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-slate-900;
   }
   .btn-pink {
-    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-pink px-5 py-2.5 text-sm font-semibold text-white shadow-chic transition hover:shadow-glow-pink hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-slate-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-gradient-pink px-7 py-3 text-sm font-semibold text-white shadow-chic transition hover:shadow-glow-pink hover:brightness-105 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:focus:ring-offset-slate-900;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:focus:ring-offset-slate-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-medium text-slate-700 shadow-card transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:focus:ring-offset-slate-900;
   }
   .btn-danger {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-red-100 bg-white px-4 py-2.5 text-sm font-medium text-red-600 shadow-sm transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-900/60 dark:bg-slate-800 dark:text-red-300 dark:hover:bg-red-950/50 dark:focus:ring-offset-slate-900;
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-medium text-red-600 shadow-card transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-red-300 dark:hover:bg-red-950/50 dark:focus:ring-offset-slate-900;
   }
   .input {
-    @apply block w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-200 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:border-brand-400 dark:focus:ring-brand-500/30;
+    @apply block w-full rounded-2xl border border-transparent bg-slate-100 px-4 py-3 text-sm text-slate-900 placeholder-slate-400 transition focus:border-brand-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-200 dark:bg-slate-800/60 dark:text-slate-100 dark:placeholder-slate-500 dark:focus:bg-slate-900 dark:focus:border-brand-500/50 dark:focus:ring-brand-500/30;
   }
   .label {
-    @apply mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300;
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400;
   }
   .card {
-    @apply rounded-3xl border border-slate-200/70 bg-white shadow-chic dark:border-slate-800 dark:bg-slate-900;
+    @apply rounded-[2rem] bg-white shadow-card dark:bg-slate-900 dark:shadow-none;
   }
   .card-soft {
-    @apply rounded-3xl border border-slate-100 bg-gradient-soft shadow-chic dark:border-slate-800 dark:bg-slate-900;
+    @apply rounded-[2rem] bg-gradient-soft shadow-card dark:bg-slate-900 dark:shadow-none;
+  }
+  .icon-btn {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white;
+  }
+  .icon-btn-blue {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-600 transition hover:bg-brand-100 focus:outline-none focus:ring-2 focus:ring-brand-400 dark:bg-brand-500/15 dark:text-brand-200 dark:hover:bg-brand-500/25;
+  }
+  .icon-btn-pink {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent-50 text-accent-600 transition hover:bg-accent-100 focus:outline-none focus:ring-2 focus:ring-accent-400 dark:bg-accent-500/15 dark:text-accent-200 dark:hover:bg-accent-500/25;
+  }
+  .icon-btn-danger {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-600 transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-red-500/15 dark:text-red-200 dark:hover:bg-red-500/25;
   }
   .table-base {
     @apply min-w-full divide-y divide-slate-100 text-sm dark:divide-slate-800;
@@ -88,5 +100,23 @@ body {
   }
   .icon-pill-cyan {
     @apply bg-cyan-50 text-cyan-600 dark:bg-cyan-500/15 dark:text-cyan-300;
+  }
+  .avatar {
+    @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight;
+  }
+  .avatar-blue {
+    @apply bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200;
+  }
+  .avatar-pink {
+    @apply bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200;
+  }
+  .avatar-cyan {
+    @apply bg-cyan-50 text-cyan-700 dark:bg-cyan-500/15 dark:text-cyan-200;
+  }
+  .avatar-mint {
+    @apply bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200;
+  }
+  .avatar-lavender {
+    @apply bg-violet-50 text-violet-700 dark:bg-violet-500/15 dark:text-violet-200;
   }
 }

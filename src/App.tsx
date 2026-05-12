@@ -11,6 +11,8 @@ const Clients = lazy(() => import('./pages/Clients'))
 const ClientDetail = lazy(() => import('./pages/ClientDetail'))
 const Professionals = lazy(() => import('./pages/Professionals'))
 const Services = lazy(() => import('./pages/Services'))
+const Reviews = lazy(() => import('./pages/Reviews'))
+const Messages = lazy(() => import('./pages/Messages'))
 
 function PageFallback() {
   return (
@@ -91,6 +93,22 @@ export default function App() {
           element={
             <Lazy>
               <Services />
+            </Lazy>
+          }
+        />
+        <Route
+          path="avaliacoes"
+          element={
+            <Lazy>
+              <Reviews />
+            </Lazy>
+          }
+        />
+        <Route
+          path="mensagens"
+          element={
+            <Lazy>
+              <Messages />
             </Lazy>
           }
         />

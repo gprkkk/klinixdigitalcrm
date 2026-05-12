@@ -1,8 +1,17 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react'
-import { Clock, Loader2, Pencil, Plus, Search, Trash2, UserCog } from 'lucide-react'
+import {
+  Loader2,
+  Mail,
+  Pencil,
+  Phone,
+  Plus,
+  Search,
+  Star,
+  Stethoscope,
+  Trash2,
+} from 'lucide-react'
 import { supabase } from '../lib/supabase'
 import { DAYS_OF_WEEK, Professional, ProfessionalSchedule } from '../lib/types'
-import PageHeader from '../components/PageHeader'
 import Modal from '../components/Modal'
 import EmptyState from '../components/EmptyState'
 
@@ -40,12 +49,57 @@ const normalizeTime = (t: string | null | undefined): string => {
   return `${parts[0] ?? '00'}:${parts[1] ?? '00'}`
 }
 
+const getInitials = (name: string): string =>
+  name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((p) => p[0]?.toUpperCase() ?? '')
+    .join('') || '?'
+
+const SPECIALTIES = [
+  'Dermatologia',
+  'Estética facial',
+  'Pós-operatório',
+  'Massoterapia',
+  'Procedimentos a laser',
+  'Harmonização',
+] as const
+
+const fakeSpecialty = (id: string) => {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 31 + id.charCodeAt(i)) >>> 0
+  return SPECIALTIES[hash % SPECIALTIES.length]
+}
+
+const fakeRating = (id: string) => {
+  let hash = 0
+  for (let i = 0; i < id.length; i++) hash = (hash * 17 + id.charCodeAt(i)) >>> 0
+  return 4.5 + ((hash % 10) / 20)
+}
+
+const Stars = ({ rating }: { rating: number }) => {
+  const rounded = Math.round(rating)
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          size={11}
+          className={i < rounded ? 'fill-amber-400 text-amber-400' : 'text-slate-200 dark:text-slate-700'}
+        />
+      ))}
+    </span>
+  )
+}
+
 export default function Professionals() {
   const [professionals, setProfessionals] = useState<Professional[]>([])
   const [schedules, setSchedules] = useState<Record<string, ProfessionalSchedule[]>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [specialtyFilter, setSpecialtyFilter] = useState<string>('all')
 
   const [modalOpen, setModalOpen] = useState(false)
   const [form, setForm] = useState<ProfessionalFormState>(emptyForm())
@@ -77,9 +131,12 @@ export default function Professionals() {
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
-    if (!q) return professionals
-    return professionals.filter((p) => p.name.toLowerCase().includes(q))
-  }, [professionals, search])
+    return professionals.filter((p) => {
+      if (specialtyFilter !== 'all' && fakeSpecialty(p.id) !== specialtyFilter) return false
+      if (!q) return true
+      return p.name.toLowerCase().includes(q)
+    })
+  }, [professionals, search, specialtyFilter])
 
   const openCreate = () => {
     setForm(emptyForm())
@@ -189,38 +246,63 @@ export default function Professionals() {
 
   return (
     <>
-      <PageHeader
-        title="Profissionais"
-        description="Cadastre profissionais e configure suas grades de horários."
-        actions={
-          <button type="button" className="btn-primary" onClick={openCreate}>
-            <Plus size={16} /> Novo profissional
-          </button>
-        }
-      />
+      <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            Profissionais
+          </h1>
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            Equipe da clínica com especialidades, grade de horários e contato rápido
+          </p>
+        </div>
+        <button type="button" className="btn-primary" onClick={openCreate}>
+          <Plus size={16} /> Novo profissional
+        </button>
+      </div>
 
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-6 flex flex-wrap items-center gap-3">
         <div className="relative w-full max-w-sm">
-          <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+          <Search size={16} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Buscar por nome"
-            className="input pl-9"
+            placeholder="Buscar profissional"
+            className="input pl-11"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      {error && <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">{error}</div>}
+      <div className="mb-6 flex flex-wrap gap-2">
+        {(['all', ...SPECIALTIES] as const).map((cat) => (
+          <button
+            type="button"
+            key={cat}
+            onClick={() => setSpecialtyFilter(cat)}
+            className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+              specialtyFilter === cat
+                ? 'bg-gradient-cta text-white shadow-chic'
+                : 'bg-white text-slate-600 shadow-card hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300'
+            }`}
+          >
+            {cat === 'all' ? 'Todos especialistas' : cat}
+          </button>
+        ))}
+      </div>
+
+      {error && (
+        <div className="mb-4 rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
+          {error}
+        </div>
+      )}
 
       {loading ? (
-        <div className="card flex items-center justify-center px-6 py-16 text-slate-500 dark:text-slate-400">
+        <div className="card flex items-center justify-center px-6 py-20 text-slate-500 dark:text-slate-400">
           <Loader2 size={20} className="mr-2 animate-spin" /> Carregando profissionais...
         </div>
       ) : filtered.length === 0 ? (
         <EmptyState
-          icon={<UserCog size={32} />}
+          icon={<Stethoscope size={32} />}
           title="Nenhum profissional cadastrado"
           description="Adicione profissionais para poder vinculá-los aos agendamentos."
           action={
@@ -230,69 +312,97 @@ export default function Professionals() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((pro, idx) => {
-            const usePink = idx % 2 === 1
-            const initials =
-              pro.name
-                .trim()
-                .split(/\s+/)
-                .slice(0, 2)
-                .map((p) => p[0]?.toUpperCase() ?? '')
-                .join('') || '?'
+            const palette =
+              idx % 3 === 0 ? 'avatar-blue' : idx % 3 === 1 ? 'avatar-pink' : 'avatar-cyan'
+            const initials = getInitials(pro.name)
+            const specialty = fakeSpecialty(pro.id)
+            const rating = fakeRating(pro.id)
             return (
               <div
                 key={pro.id}
-                className="card flex flex-col gap-5 p-6 transition hover:-translate-y-0.5 hover:shadow-glow"
+                className="card flex flex-col gap-5 p-6 transition hover:-translate-y-0.5"
               >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sm font-bold tracking-tight ${
-                      usePink
-                        ? 'bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-200'
-                        : 'bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-200'
-                    }`}
-                  >
-                    {initials}
+                <div className="flex flex-col items-center text-center">
+                  <div className={`avatar ${palette} h-20 w-20 text-2xl`}>{initials}</div>
+                  <h3 className="mt-4 text-base font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                    {pro.name}
+                  </h3>
+                  <span className="mt-0.5 text-[11px] font-medium uppercase tracking-wider text-slate-400">
+                    ID #{pro.id.slice(0, 6).toUpperCase()}
+                  </span>
+                  <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-accent-50 px-3 py-1 text-xs font-semibold text-accent-700 dark:bg-accent-500/15 dark:text-accent-200">
+                    {specialty}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="truncate text-base font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-                      {pro.name}
+                  <div className="mt-3 flex items-center gap-2">
+                    <Stars rating={rating} />
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-200">
+                      {rating.toFixed(1)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-slate-50 px-3 py-2.5 text-center dark:bg-slate-800/60">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                      Status
                     </div>
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                      {pro.is_active === false ? (
-                        <span className="badge bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
-                          Inativo
-                        </span>
-                      ) : (
-                        <span className="badge bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
-                          Ativo
-                        </span>
-                      )}
-                      <span className="badge bg-brand-50 text-brand-700 dark:bg-brand-500/15 dark:text-brand-300">
-                        <Clock size={12} className="mr-1" />
-                        {summarizeSchedule(pro.id)}
-                      </span>
+                    <div
+                      className={`mt-0.5 text-xs font-bold ${
+                        pro.is_active === false
+                          ? 'text-slate-500'
+                          : 'text-emerald-600 dark:text-emerald-300'
+                      }`}
+                    >
+                      {pro.is_active === false ? 'Inativo' : 'Ativo'}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl bg-slate-50 px-3 py-2.5 text-center dark:bg-slate-800/60">
+                    <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                      Grade
+                    </div>
+                    <div className="mt-0.5 text-xs font-bold text-slate-700 dark:text-slate-200">
+                      {summarizeSchedule(pro.id)}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 border-t border-slate-100 pt-4 dark:border-slate-800">
-                  <button
-                    type="button"
-                    className="btn-secondary !px-4 !py-2 text-xs"
-                    onClick={() => openEdit(pro)}
-                  >
-                    <Pencil size={14} /> Editar
-                  </button>
-                  <button
-                    type="button"
-                    className="btn-danger !px-3 !py-2"
-                    onClick={() => handleDelete(pro)}
-                    aria-label="Excluir profissional"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="icon-btn-blue"
+                      aria-label="Telefone"
+                    >
+                      <Phone size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn-pink"
+                      aria-label="Email"
+                    >
+                      <Mail size={14} />
+                    </button>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="icon-btn"
+                      aria-label="Editar"
+                      onClick={() => openEdit(pro)}
+                    >
+                      <Pencil size={14} />
+                    </button>
+                    <button
+                      type="button"
+                      className="icon-btn-danger"
+                      aria-label="Excluir"
+                      onClick={() => handleDelete(pro)}
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
                 </div>
               </div>
             )
@@ -333,15 +443,17 @@ export default function Professionals() {
 
           <div>
             <label className="label">Grade de horários (Segunda a Sábado)</label>
-            <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-800 dark:bg-slate-900/40">
+            <div className="space-y-2 rounded-2xl bg-slate-50 p-3 dark:bg-slate-900/40">
               {form.schedules.map((s, idx) => {
                 const day = DAYS_OF_WEEK.find((d) => d.value === s.day_of_week)
                 return (
                   <div
                     key={s.day_of_week}
-                    className="grid grid-cols-12 items-center gap-2 rounded-lg bg-white px-3 py-2 shadow-sm dark:bg-slate-800"
+                    className="grid grid-cols-12 items-center gap-2 rounded-xl bg-white px-3 py-2 shadow-card dark:bg-slate-800"
                   >
-                    <div className="col-span-3 text-sm font-medium text-slate-700 dark:text-slate-200">{day?.label}</div>
+                    <div className="col-span-3 text-sm font-medium text-slate-700 dark:text-slate-200">
+                      {day?.label}
+                    </div>
                     <div className="col-span-2 flex items-center gap-2">
                       <input
                         id={`active-${s.day_of_week}`}
@@ -354,7 +466,10 @@ export default function Professionals() {
                         }}
                         className="h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900"
                       />
-                      <label htmlFor={`active-${s.day_of_week}`} className="text-sm text-slate-600 dark:text-slate-300">
+                      <label
+                        htmlFor={`active-${s.day_of_week}`}
+                        className="text-sm text-slate-600 dark:text-slate-300"
+                      >
                         {s.is_working ? 'Ativo' : 'Inativo'}
                       </label>
                     </div>
@@ -371,7 +486,9 @@ export default function Professionals() {
                         }}
                       />
                     </div>
-                    <div className="col-span-1 text-center text-xs text-slate-400 dark:text-slate-500">até</div>
+                    <div className="col-span-1 text-center text-xs text-slate-400 dark:text-slate-500">
+                      até
+                    </div>
                     <div className="col-span-3">
                       <input
                         type="time"
@@ -392,7 +509,9 @@ export default function Professionals() {
           </div>
 
           {formError && (
-            <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">{formError}</div>
+            <div className="rounded-2xl bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300">
+              {formError}
+            </div>
           )}
 
           <div className="flex justify-end gap-2 pt-2">
