@@ -1,34 +1,99 @@
+import { lazy, Suspense, type ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import Landing from './pages/Landing'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import Agenda from './pages/Agenda'
-import Clients from './pages/Clients'
-import ClientDetail from './pages/ClientDetail'
-import Professionals from './pages/Professionals'
-import Services from './pages/Services'
-import Layout from './components/Layout'
-import ProtectedRoute from './components/ProtectedRoute'
+
+const Login = lazy(() => import('./pages/Login'))
+const Layout = lazy(() => import('./components/Layout'))
+const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+const Agenda = lazy(() => import('./pages/Agenda'))
+const Clients = lazy(() => import('./pages/Clients'))
+const ClientDetail = lazy(() => import('./pages/ClientDetail'))
+const Professionals = lazy(() => import('./pages/Professionals'))
+const Services = lazy(() => import('./pages/Services'))
+
+function PageFallback() {
+  return (
+    <div className="flex h-screen items-center justify-center bg-slate-50">
+      <div className="text-slate-500">Carregando...</div>
+    </div>
+  )
+}
+
+function Lazy({ children }: { children: ReactNode }) {
+  return <Suspense fallback={<PageFallback />}>{children}</Suspense>
+}
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Landing />} />
-      <Route path="/login" element={<Login />} />
+      <Route
+        path="/login"
+        element={
+          <Lazy>
+            <Login />
+          </Lazy>
+        }
+      />
       <Route
         path="/app"
         element={
-          <ProtectedRoute>
-            <Layout />
-          </ProtectedRoute>
+          <Lazy>
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          </Lazy>
         }
       >
-        <Route index element={<Dashboard />} />
-        <Route path="agenda" element={<Agenda />} />
-        <Route path="clientes" element={<Clients />} />
-        <Route path="clientes/:id" element={<ClientDetail />} />
-        <Route path="profissionais" element={<Professionals />} />
-        <Route path="servicos" element={<Services />} />
+        <Route
+          index
+          element={
+            <Lazy>
+              <Dashboard />
+            </Lazy>
+          }
+        />
+        <Route
+          path="agenda"
+          element={
+            <Lazy>
+              <Agenda />
+            </Lazy>
+          }
+        />
+        <Route
+          path="clientes"
+          element={
+            <Lazy>
+              <Clients />
+            </Lazy>
+          }
+        />
+        <Route
+          path="clientes/:id"
+          element={
+            <Lazy>
+              <ClientDetail />
+            </Lazy>
+          }
+        />
+        <Route
+          path="profissionais"
+          element={
+            <Lazy>
+              <Professionals />
+            </Lazy>
+          }
+        />
+        <Route
+          path="servicos"
+          element={
+            <Lazy>
+              <Services />
+            </Lazy>
+          }
+        />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
